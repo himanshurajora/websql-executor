@@ -6,6 +6,8 @@ function App() {
 
   const [currentQuery, setCurrentQuery] = useState('')
   const [message, setMessage] = useState('')
+  const [outputRows, setOutputRows] = useState<Array<any>>()
+  const [outputRowHeads, setOutputRowHeads] = useState<Array<string>>()
   var dataBase: Database
   useEffect(() => {
     dataBase = window.openDatabase("DemoWebSql", "1.0", "Test DataBase", 1024 * 1024 * 2, () => {
@@ -18,11 +20,33 @@ function App() {
     dataBase.transaction((query) => {
       query.executeSql(currentQuery, undefined, (transaction, result) => {
         console.log("query executed with the result: ", result)
-        if (result.insertId) {
-          setMessage("Row(s) Inserted Successfully to Row Number " + result.insertId);
+        try {
+          if (result.insertId) {
+            setMessage("Row(s) Inserted Successfully to Row Number " + result.insertId)
+          }
         }
-        else if(result.rows){
-          
+        catch (err) { }
+
+        if (result.rows.length) {
+          setMessage("Row(s) got Fetched Successfully, Length is " + result.rows.length)
+          var resultToArray = []; 
+          var keys = Object.keys(result.rows[0])
+          setOutputRowHeads(keys)
+          for(var i = 0; i < result.rows.length; i++){
+            var item : any = {}
+            for(var key of keys){
+              item[key] = result.rows[i][key]
+            }
+            resultToArray.push(item)
+          }
+          console.log(outputRowHeads,resultToArray);
+        }
+        else if (result.rowsAffected) {
+          setMessage("Changed Got Applied Number of Affected Rows is " + result.rowsAffected)
+        }
+
+        else {
+          setMessage("Query Executed Successfully")
         }
       }, (transaction, error): any => {
         console.log("query failed with error", error, "bad query", currentQuery)
@@ -30,6 +54,7 @@ function App() {
       })
     })
   }
+
   return (
     <div className="App">
       <h2>WebSql Executor</h2>
@@ -39,7 +64,12 @@ function App() {
       <hr />
       <div className="output">
         <div className="top">
-          <span>Message: <span>{message}</span></span>
+          <span>Output: <span>{message}</span></span>
+        </div>
+        <div className="bottom">
+          {
+        
+          }
         </div>
       </div>
     </div>
