@@ -29,17 +29,18 @@ function App() {
 
         if (result.rows.length) {
           setMessage("Row(s) got Fetched Successfully, Length is " + result.rows.length)
-          var resultToArray = []; 
+          var resultToArray = [];
           var keys = Object.keys(result.rows[0])
           setOutputRowHeads(keys)
-          for(var i = 0; i < result.rows.length; i++){
-            var item : any = {}
-            for(var key of keys){
-              item[key] = result.rows[i][key]
+          for (var i = 0; i < result.rows.length; i++) {
+            var item: any = []
+            for (var key of keys) {
+              item.push(result.rows[i][key])
             }
             resultToArray.push(item)
           }
-          console.log(outputRowHeads,resultToArray);
+          console.log(outputRowHeads, resultToArray);
+          setOutputRows(resultToArray)
         }
         else if (result.rowsAffected) {
           setMessage("Changed Got Applied Number of Affected Rows is " + result.rowsAffected)
@@ -67,9 +68,31 @@ function App() {
           <span>Output: <span>{message}</span></span>
         </div>
         <div className="bottom">
-          {
-        
-          }
+          <table>
+            <thead>
+              <tr>
+                {
+                  outputRowHeads?.map((value) => {
+                    return <th>{value}</th>
+                  })
+                }
+              </tr>
+            </thead>
+            <tbody>
+              {
+                outputRows?.map((value: Array<any>) => {
+                  return <tr>
+                    {
+                      value.map((item) => {
+                        return <td>{item}</td>
+                      })
+                    }
+                  </tr>
+                })
+              }
+
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
