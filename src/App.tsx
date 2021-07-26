@@ -29,7 +29,7 @@ function App() {
 
         if (result.rows.length) {
           setMessage("Row(s) got Fetched Successfully, Length is " + result.rows.length)
-          var resultToArray = [];
+          var resultToArray : any[] = [];
           var keys = Object.keys(result.rows[0])
           setOutputRowHeads(keys)
           for (var i = 0; i < result.rows.length; i++) {
