@@ -22,17 +22,14 @@ function App() {
   })
 
   const runQuery = async () => {
+
+    setOutputRowHeads(undefined)
+    setOutputRows(undefined)
+    
     console.log("running the query : ", currentQuery)
     dataBase.transaction((query) => {
       query.executeSql(currentQuery, undefined, (transaction, result) => {
         console.log("query executed with the result: ", result)
-        try {
-          if (result.insertId) {
-            setMessage("Row(s) Inserted Successfully to Row Number " + result.insertId)
-          }
-        }
-        catch (err) { }
-
         if (result.rows.length) {
           setMessage("Row(s) got Fetched Successfully, Length is " + result.rows.length)
           var resultToArray : any[] = [];
@@ -50,6 +47,12 @@ function App() {
         }
         else if (result.rowsAffected) {
           setMessage("Changed Got Applied Number of Affected Rows is " + result.rowsAffected)
+
+          try{
+            if (result.insertId) {
+              setMessage("Row(s) Inserted Successfully to Row Number " + result.insertId + ", Number of Rows Inserted " + result.rowsAffected)
+            }
+          }catch(err){}
         }
 
         else {
