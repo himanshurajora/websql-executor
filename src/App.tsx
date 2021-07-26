@@ -10,9 +10,15 @@ function App() {
   const [outputRowHeads, setOutputRowHeads] = useState<Array<string>>()
   var dataBase: Database
   useEffect(() => {
-    dataBase = window.openDatabase("DemoWebSql", "1.0", "Test DataBase", 1024 * 1024 * 2, () => {
-      console.log("dataBase Created")
-    })
+    try{
+      dataBase = window.openDatabase("DemoWebSql", "1.0", "Test DataBase", 1024 * 1024 * 2, () => {
+        console.log("dataBase Created")
+      })
+    }
+    catch(err){
+      console.log(err);
+      
+    }
   })
 
   const runQuery = async () => {
