@@ -67,6 +67,7 @@ function App() {
         <div className="top">
           <span>Output: <span>{message}</span></span>
         </div>
+        <hr />
         <div className="bottom">
           <table>
             <thead>
